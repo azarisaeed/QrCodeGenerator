@@ -1,0 +1,20 @@
+﻿@page "/"
+@using QRCoder
+
+<PageTitle>Home</PageTitle>
+<img src="data:image/png;base64, @QRimage" alt="Red dot" style="width:100px;height:100px" />
+@code {
+    private string QRimage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PayloadGenerator.Url UrlPayload = new PayloadGenerator.Url("http://saeedazari.com");
+
+        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+        using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(UrlPayload.ToString(), QRCodeGenerator.ECCLevel.Q))
+        using (Base64QRCode qrCode = new Base64QRCode(qrCodeData))
+        {
+            QRimage = qrCode.GetGraphic(20);
+        }
+    }
+}
